@@ -293,7 +293,7 @@
 <body class="" style="visibility: hidden;">
 
 <section id="top_sect" class="second">
-    <button id="main_btn" onclick="DemoApp.sendMessage('Hello World');">Send «Hello, World!»</button>
+    <button id="main_btn" onclick="DemoApp.sendMessage('');">Send «Hello, World!»</button>
     <button id="with_webview_btn" onclick="DemoApp.sendMessage('', true);">Send «Hello, World!» with inline webview button</button>
     <button id="data_btn" onclick="DemoApp.sendTime(true);">Send current time to bot (x10)</button>
     <button onclick="DemoApp.expand();">Expand Webview</button>
@@ -390,7 +390,7 @@
     const DemoApp = {
         initData: Telegram.WebApp.initData || '',
         initDataUnsafe: Telegram.WebApp.initDataUnsafe || {},
-        MainButton: c.MainButton,
+        MainButton: Telegram.WebApp.MainButton,
 
         init(options) {
             document.body.style.visibility = '';
@@ -428,7 +428,36 @@
 
             const btn = document.querySelector('#btn_status');
             btn.textContent = 'Sending...';
-            Telegram.Webapp.sendData('sendMessage(`Hello World`);');
+
+            DemoApp.apiRequest('sendMessage', {
+                msg_id: msg_id || '',
+                with_webview: !DemoApp.initDataUnsafe.receiver && with_webview ? 1 : 0
+            }, function(result) {
+                document.querySelectorAll('button').forEach((btn) => btn.disabled = false);
+
+                if (result.response) {
+                    if (result.response.ok) {
+                        btn.textContent = 'Message sent successfully!';
+                        btn.className = 'ok';
+                        btn.style.display = 'block';
+                    } else {
+                        btn.textContent = result.response.description;
+                        btn.className = 'err';
+                        btn.style.display = 'block';
+                        alert(result.response.description);
+                    }
+                } else if (result.error) {
+                    btn.textContent = result.error;
+                    btn.className = 'err';
+                    btn.style.display = 'block';
+                    alert(result.error);
+                } else {
+                    btn.textContent = 'Unknown error';
+                    btn.className = 'err';
+                    btn.style.display = 'block';
+                    alert('Unknown error');
+                }
+            });
         },
         changeMenuButton(close) {
             document.querySelectorAll('button').forEach((btn) => btn.disabled = true);
