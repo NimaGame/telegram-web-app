@@ -293,7 +293,7 @@
 <body class="" style="visibility: hidden;">
 
 <section id="top_sect" class="second">
-    <button id="main_btn" onclick="DemoApp.sendMessage('Eeeee');">Send «Hello, World!»</button>
+    <button id="main_btn" onclick="DemoApp.sendMessage('');">Send «Hello, World!»</button>
     <button id="with_webview_btn" onclick="DemoApp.sendMessage('', true);">Send «Hello, World!» with inline webview button</button>
     <button id="data_btn" onclick="DemoApp.sendTime(true);">Send current time to bot (x10)</button>
     <button onclick="DemoApp.expand();">Expand Webview</button>
@@ -429,8 +429,7 @@
             const btn = document.querySelector('#btn_status');
             btn.textContent = 'Sending...';
 
-            Telegram.WebApp.sendData('Test Data');
-            /*DemoApp.apiRequest('sendMessage', {
+            DemoApp.apiRequest('sendMessage', {
                 msg_id: msg_id || '',
                 with_webview: !DemoApp.initDataUnsafe.receiver && with_webview ? 1 : 0
             }, function(result) {
@@ -458,7 +457,7 @@
                     btn.style.display = 'block';
                     alert('Unknown error');
                 }
-            });*/
+            });
         },
         changeMenuButton(close) {
             document.querySelectorAll('button').forEach((btn) => btn.disabled = true);
